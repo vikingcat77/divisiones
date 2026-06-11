@@ -1,10 +1,13 @@
 /* Variables de color */
 :root {
-    --bg-color: #f0f4f8;
-    --accent-color: #4a90e2;
+    --bg-color: #edf3ec;
+    --accent-color: #2f7d6d;
     --sidebar-bg: rgba(255, 255, 255, 0.8);
-    --paper-white: #ffffff;
-    --text-main: #33475b;
+    --paper-white: #fffdf4;
+    --text-main: #2f3d44;
+    --ink-color: #24343a;
+    --paper-line: rgba(78, 148, 196, 0.18);
+    --paper-margin: rgba(214, 78, 78, 0.38);
 }
 
 * {
@@ -15,7 +18,9 @@
 
 body {
     font-family: 'Quicksand', sans-serif;
-    background-color: var(--bg-color);
+    background:
+        radial-gradient(circle at top left, rgba(255, 218, 120, 0.28), transparent 32rem),
+        linear-gradient(135deg, #e6efe7 0%, var(--bg-color) 46%, #eef0dc 100%);
     min-height: 100vh;
     display: flex;
     color: var(--text-main);
@@ -64,13 +69,35 @@ body {
 }
 
 .paper {
-    background: var(--paper-white);
+    background:
+        linear-gradient(90deg, transparent 0 58px, var(--paper-margin) 59px 61px, transparent 62px),
+        repeating-linear-gradient(0deg, transparent 0 31px, var(--paper-line) 32px 33px),
+        linear-gradient(180deg, #fffefa 0%, var(--paper-white) 100%);
     flex: 1;
-    border-radius: 15px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 18px 35px rgba(63, 53, 36, 0.16), 0 2px 0 rgba(255,255,255,0.65) inset;
+    padding: 38px 40px 38px 82px;
     position: relative;
-    border-bottom: 5px solid #d1d9e6;
+    border: 1px solid #eadfbc;
+    border-bottom: 5px solid #d8c999;
+    overflow: hidden;
+}
+
+.paper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        radial-gradient(circle, rgba(41, 49, 54, 0.08) 0 1px, transparent 1.5px),
+        linear-gradient(105deg, rgba(255,255,255,0.42), transparent 34%);
+    background-size: 29px 29px, 100% 100%;
+    mix-blend-mode: multiply;
+    opacity: 0.55;
+}
+
+.paper > * {
+    position: relative;
 }
 
 /* Elementos Visuales */
@@ -112,42 +139,46 @@ input:focus {
 }
 
 .division-container {
-    background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
-    border: 2px solid #dbe7f3;
-    border-radius: 18px;
-    padding: 28px;
+    background: rgba(255, 253, 244, 0.36);
+    border: 0;
+    border-radius: 0;
+    padding: 18px 0 4px;
 }
 
 .division-layout {
     display: grid;
-    grid-template-columns: minmax(0, 3fr) minmax(130px, 1fr);
+    grid-template-columns: minmax(0, 3fr) minmax(132px, 1fr);
     align-items: start;
+    max-width: 720px;
+    margin: 0 auto;
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,0.8));
 }
 
 .division-left {
     min-width: 0;
-    padding-right: 18px;
-    border-top: 4px solid var(--text-main);
-    border-right: 4px solid var(--text-main);
+    padding-right: 22px;
+    border-top: 3px solid var(--ink-color);
+    border-right: 3px solid var(--ink-color);
+    transform: rotate(-0.2deg);
 }
 
 .division-right {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
     align-items: center;
-    padding-top: 12px;
+    padding-top: 4px;
     padding-left: 18px;
 }
 
 .number-display {
-    min-height: 84px;
+    min-height: 78px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     flex-wrap: wrap;
-    gap: 10px;
-    padding: 16px 0 16px 0;
+    gap: 2px;
+    padding: 12px 0 10px 0;
     font-size: clamp(2rem, 4vw, 3.5rem);
     font-weight: 700;
 }
@@ -155,43 +186,52 @@ input:focus {
 .digit-btn,
 .lowered-digit,
 .static-digit {
-    min-width: 48px;
-    min-height: 58px;
-    border-radius: 14px;
+    min-width: clamp(34px, 4vw, 48px);
+    min-height: 52px;
+    border-radius: 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     font-size: clamp(1.7rem, 3vw, 2.6rem);
     font-weight: 700;
+    font-family: "Comic Sans MS", "Bradley Hand", "Segoe Print", cursive;
+    color: var(--ink-color);
+    line-height: 1;
+    text-shadow: 0.4px 0.5px 0 rgba(36, 52, 58, 0.16);
 }
 
 .digit-btn {
-    border: 2px solid #bfd2e5;
-    background: #ffffff;
-    color: var(--text-main);
+    border: 2px solid transparent;
+    background: transparent;
+    color: var(--ink-color);
+    padding: 4px 6px;
+    transform: rotate(-1deg);
 }
 
 .digit-btn.available {
-    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.12);
+    border-bottom-color: rgba(47, 125, 109, 0.45);
+    background: rgba(255, 246, 167, 0.42);
+    box-shadow: 0 10px 0 -7px rgba(47, 125, 109, 0.28);
 }
 
 .digit-btn.selected {
-    background: #dbeafe;
-    border-color: #4a90e2;
-    color: #1d4ed8;
+    background: rgba(255, 232, 116, 0.62);
+    border-color: rgba(232, 179, 51, 0.55);
+    color: #1f5e53;
+    transform: rotate(0.8deg) translateY(-2px);
 }
 
 .digit-btn.locked {
-    background: #eef2f7;
-    border-color: #d2dbe7;
-    color: #8a99aa;
+    background: transparent;
+    border-color: transparent;
+    color: rgba(36, 52, 58, 0.5);
     cursor: default;
 }
 
 .digit-btn.lowering {
-    background: #fff7d6;
-    border-color: #f3bf2a;
-    color: #8a5b00;
+    background: rgba(255, 246, 167, 0.56);
+    border-color: rgba(232, 179, 51, 0.58);
+    color: #7a5a00;
     animation: pulse-lift 1.1s ease-in-out infinite;
 }
 
@@ -201,7 +241,10 @@ input:focus {
     align-items: center;
     font-size: clamp(1.7rem, 3.5vw, 3rem);
     font-weight: 700;
-    min-height: 60px;
+    min-height: 56px;
+    font-family: "Comic Sans MS", "Bradley Hand", "Segoe Print", cursive;
+    color: var(--ink-color);
+    transform: rotate(0.4deg);
 }
 
 .quotient-boxes {
@@ -209,72 +252,85 @@ input:focus {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 8px;
-    min-height: 64px;
+    gap: 0;
+    min-height: 58px;
+    padding-top: 2px;
+    border-top: 3px solid var(--ink-color);
 }
 
 .quotient-slot {
-    width: 48px;
-    height: 58px;
-    border-radius: 12px;
-    border: 2px solid #cbd5e0;
-    background: #fff;
+    width: clamp(32px, 4vw, 46px);
+    height: 52px;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 2px dotted rgba(76, 89, 96, 0.38);
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: clamp(1.45rem, 2.6vw, 2.2rem);
     font-weight: 700;
+    font-family: "Comic Sans MS", "Bradley Hand", "Segoe Print", cursive;
+    color: rgba(76, 89, 96, 0.55);
 }
 
 .quotient-slot.filled {
-    border-color: #48bb78;
-    background: #ecfdf5;
-    color: #166534;
+    border-color: rgba(47, 125, 109, 0.35);
+    background: transparent;
+    color: #1f5e53;
+    transform: rotate(-0.8deg);
 }
 
 .subtraction-area {
-    min-height: 154px;
+    min-height: 176px;
     display: flex;
     justify-content: flex-end;
     align-items: flex-start;
-    padding: 8px 0 0;
+    padding: 6px 0 0;
 }
 
 .subtraction-box {
-    width: min(100%, 340px);
-    border: 2px dashed #c8d5e3;
-    border-radius: 16px;
-    background: #fbfdff;
-    padding: 14px 16px;
+    width: min(100%, 360px);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    padding: 0 4px 8px;
+    transform: rotate(-0.3deg);
 }
 
 .subtraction-box.empty {
     text-align: center;
-    color: #8a99aa;
+    color: rgba(76, 89, 96, 0.72);
     font-weight: 700;
+    border: 2px dashed rgba(76, 89, 96, 0.22);
+    border-radius: 10px;
+    padding: 18px 12px;
+    background: rgba(255,255,255,0.28);
 }
 
 .subtraction-row {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 0;
+    min-height: 46px;
 }
 
 .subtraction-row + .subtraction-row {
-    margin-top: 8px;
+    margin-top: 2px;
 }
 
 .subtraction-row.line {
-    border-bottom: 3px solid var(--text-main);
-    padding-bottom: 8px;
+    border-bottom: 3px solid var(--ink-color);
+    padding-bottom: 4px;
 }
 
 .subtraction-sign {
-    width: 22px;
+    width: 30px;
     text-align: center;
     font-size: 1.8rem;
     font-weight: 700;
-    color: var(--text-main);
+    color: var(--ink-color);
+    font-family: "Comic Sans MS", "Bradley Hand", "Segoe Print", cursive;
 }
 
 #steps-container {
@@ -284,24 +340,26 @@ input:focus {
 }
 
 .interaction-panel {
-    margin-top: 22px;
+    margin-top: 28px;
     display: grid;
     grid-template-columns: minmax(240px, 1.1fr) minmax(0, 1fr);
     gap: 16px;
 }
 
 .current-step-card {
-    background: #eef6ff;
-    border: 2px solid #bfdbfe;
-    border-radius: 16px;
+    background: rgba(232, 244, 240, 0.74);
+    border: 2px solid rgba(47, 125, 109, 0.22);
+    border-radius: 10px;
     padding: 18px;
+    box-shadow: 0 8px 18px rgba(47, 61, 68, 0.07);
 }
 
 .step-card {
-    background: #f8fafc;
-    border-left: 5px solid #93c5fd;
-    border-radius: 12px;
+    background: rgba(255, 253, 244, 0.74);
+    border-left: 5px solid #8ab6a8;
+    border-radius: 8px;
     padding: 12px 14px;
+    box-shadow: 0 6px 14px rgba(47, 61, 68, 0.06);
 }
 
 .step-card strong {
@@ -321,8 +379,8 @@ input:focus {
 }
 
 .step-card.solved {
-    border-left-color: #48bb78;
-    background: #f0fdf4;
+    border-left-color: #4f9f83;
+    background: rgba(240, 253, 244, 0.72);
 }
 
 .active-step {
@@ -348,12 +406,13 @@ input:focus {
 
 .choice-btn {
     min-height: 54px;
-    border-radius: 12px;
-    border: 2px solid #cbd5e0;
-    background: #fff;
+    border-radius: 8px;
+    border: 2px solid rgba(76, 89, 96, 0.24);
+    background: rgba(255, 253, 244, 0.8);
     color: var(--text-main);
     font-size: 1.2rem;
     font-weight: 700;
+    font-family: "Comic Sans MS", "Bradley Hand", "Segoe Print", cursive;
 }
 
 .choice-btn.selected {
@@ -402,14 +461,15 @@ input:focus {
 }
 
 .help-box {
-    background: #eef2ff;
+    background: rgba(255, 249, 196, 0.82);
     padding: 15px;
-    border-radius: 12px;
-    border-left: 5px solid #818cf8;
+    border-radius: 8px;
+    border-left: 5px solid #d9a441;
     position: absolute;
     bottom: 30px;
     left: 40px;
     right: 40px;
+    box-shadow: 0 8px 18px rgba(74, 60, 24, 0.08);
 }
 
 .check-box {
@@ -488,24 +548,48 @@ button:active {
 
 @media (max-width: 640px) {
     .paper {
-        padding: 22px;
+        padding: 22px 18px 22px 44px;
     }
 
-    .division-layout,
+    .division-layout {
+        grid-template-columns: minmax(0, 1fr) minmax(70px, 0.34fr);
+    }
+
     .interaction-panel {
         grid-template-columns: 1fr;
     }
 
     .division-left {
-        border-right: none;
+        border-right: 3px solid var(--ink-color);
+        padding-right: 10px;
+    }
+
+    .division-right {
+        padding-left: 10px;
+    }
+
+    .divisor-box {
+        min-height: 52px;
     }
 
     .number-display {
-        justify-content: center;
+        justify-content: flex-end;
+    }
+
+    .digit-btn,
+    .lowered-digit,
+    .static-digit {
+        min-width: 30px;
+        min-height: 46px;
+    }
+
+    .quotient-slot {
+        width: 30px;
+        height: 46px;
     }
 
     .subtraction-area {
-        justify-content: center;
+        justify-content: flex-end;
     }
 
     #steps-container {
