@@ -30,6 +30,7 @@ type PositionedValueBlockProps = {
 };
 
 const columnWidth = 'minmax(3.5rem, 4.75rem)';
+const quotientColumnWidth = 'minmax(3.25rem, 4.5rem)';
 
 function buildCycles(pasos: PasoDivision[]): DivisionCycle[] {
   const cycles: DivisionCycle[] = [];
@@ -185,19 +186,21 @@ export function DivisionHouse({ activeValue }: DivisionHouseProps) {
   const totalColumns = dividendDigits.length;
   const gridColumns = `repeat(${totalColumns}, ${columnWidth})`;
   const cycles = buildCycles(problemaActual.pasosEsperados);
+  const quotientSteps = cycles.map((cycle) => cycle.dividir);
+  const quotientColumns = Math.max(quotientSteps.length, valueLength(problemaActual.cocienteEsperado), 1);
+  const quotientGridColumns = `repeat(${quotientColumns}, ${quotientColumnWidth})`;
+  const quotientColumnByStepIndex = new Map(quotientSteps.map((step, index) => [step.index, index]));
   const estaCompletado = pasoActualIndex >= problemaActual.pasosEsperados.length;
   const tieneErrorActivo = historialErrores.some((error) => error.pasoIndex === pasoActualIndex);
-  const visibleQuotientSteps = cycles
-    .map((cycle) => cycle.dividir)
-    .filter((step) => isVisible(step, pasoActualIndex));
+  const visibleQuotientSteps = quotientSteps.filter((step) => isVisible(step, pasoActualIndex));
 
   const workRows = cycles.flatMap(() => ['minmax(3.75rem,auto)', '0.8rem', 'minmax(3.75rem,auto)']).join(' ');
 
   return (
-    <section className="border-4 border-block-ink bg-block-parchment p-4 shadow-block sm:p-6" aria-label="Casita de división">
+    <section className="border-4 border-block-ink bg-block-parchment p-4 shadow-block sm:p-6" aria-label="Galera de división">
       <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="font-pixel text-xs font-black uppercase text-block-stoneDark">Casita de división</p>
+          <p className="font-pixel text-xs font-black uppercase text-block-stoneDark">Galera tradicional</p>
           <h2 className="mt-1 text-2xl font-black">
             {problemaActual.dividendo} ÷ {problemaActual.divisor}
           </h2>
@@ -217,29 +220,16 @@ export function DivisionHouse({ activeValue }: DivisionHouseProps) {
 
       <div className="overflow-x-auto border-4 border-block-ink bg-white p-4 shadow-insetBlock">
         <div className="min-w-max">
-          <div className="grid" style={{ gridTemplateColumns: '5.5rem max-content' }}>
-            <div />
-            <div className="grid min-h-16 items-end pb-2" style={{ gridTemplateColumns: gridColumns }}>
-              {visibleQuotientSteps.map((step) => (
-                <PositionedValueBlock
-                  key={`quotient-${step.index}`}
-                  step={step}
-                  activeValue={activeValue}
-                  pasoActualIndex={pasoActualIndex}
-                  hasError={tieneErrorActivo}
-                  totalColumns={totalColumns}
-                  row={1}
-                  compact
-                />
-              ))}
-            </div>
-
-            <div className="grid min-h-20 place-items-center border-r-4 border-block-ink bg-block-stone px-3 text-center font-pixel text-3xl font-black text-white shadow-insetBlock">
-              {problemaActual.divisor}
-            </div>
+          <div
+            className="grid items-start"
+            style={{
+              gridTemplateColumns: `max-content 0.9rem max-content`,
+              gridTemplateRows: 'minmax(5rem,auto) 0.9rem auto',
+            }}
+          >
             <div
-              className="grid min-h-20 border-l-4 border-t-4 border-block-ink bg-block-cloud font-pixel text-4xl font-black shadow-insetBlock"
-              style={{ gridTemplateColumns: gridColumns }}
+              className="grid min-h-20 bg-block-cloud font-pixel text-4xl font-black shadow-insetBlock"
+              style={{ gridColumn: 1, gridRow: 1, gridTemplateColumns: gridColumns }}
             >
               {dividendDigits.map((digit, index) => (
                 <span key={`${digit}-${index}`} className="grid place-items-center border-r-2 border-block-ink/15 px-2">
@@ -248,10 +238,57 @@ export function DivisionHouse({ activeValue }: DivisionHouseProps) {
               ))}
             </div>
 
-            <div />
             <div
-              className="grid border-l-4 border-block-ink py-4"
+              className="bg-block-ink shadow-block-sm"
               style={{
+                gridColumn: 2,
+                gridRow: '1 / 4',
+              }}
+            />
+
+            <div
+              className="grid min-h-20 place-items-center bg-block-stone px-6 text-center font-pixel text-3xl font-black text-white shadow-insetBlock"
+              style={{ gridColumn: 3, gridRow: 1 }}
+            >
+              {problemaActual.divisor}
+            </div>
+
+            <div
+              className="bg-block-ink shadow-block-sm"
+              style={{
+                gridColumn: 3,
+                gridRow: 2,
+              }}
+            />
+
+            <div
+              className="grid min-h-16 items-start bg-block-gold/20 px-2 py-3 shadow-insetBlock"
+              style={{ gridColumn: 3, gridRow: 3, gridTemplateColumns: quotientGridColumns }}
+            >
+              {visibleQuotientSteps.map((step) => {
+                const quotientColumn = quotientColumnByStepIndex.get(step.index) ?? 0;
+
+                return (
+                  <PositionedValueBlock
+                    key={`quotient-${step.index}`}
+                    step={step}
+                    activeValue={activeValue}
+                    pasoActualIndex={pasoActualIndex}
+                    hasError={tieneErrorActivo}
+                    totalColumns={quotientColumns}
+                    row={1}
+                    endColumn={quotientColumn}
+                    compact
+                  />
+                );
+              })}
+            </div>
+
+            <div
+              className="grid px-1 py-4"
+              style={{
+                gridColumn: 1,
+                gridRow: 3,
                 gridTemplateColumns: gridColumns,
                 gridTemplateRows: workRows,
               }}
